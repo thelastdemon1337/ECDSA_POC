@@ -1,0 +1,172 @@
+/* Fonts */
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap");
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+}
+
+.body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  min-height: 100vh;
+  background: linear-gradient(135deg, hsla(253, 16%, 7%, 1) 0, transparent 50%),
+    radial-gradient(at 50% 0%, hsla(225, 39%, 30%, 1) 0, transparent 50%),
+    radial-gradient(at 100% 0%, hsl(339, 49%, 30%) 0, transparent 50%);
+  background-color: #0f0e13;
+  box-shadow: 0px 20px 40px rgba(0, 0, 0, 0.5);
+}
+
+/* ... Rest of the styles for the drag and drop area ... */
+
+.description {
+  display: flex; /* Display the image and content side by side */
+  align-items: center; /* Vertically center the content */
+  color: white;
+  padding: 20px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+}
+
+.description-image {
+  flex: 1; /* Occupy 1 part of the available space */
+  padding-right: 20px; /* Add spacing between the image and content */
+}
+
+.description-image img {
+  max-width: 500px; /* Adjust the image size */
+}
+
+.description-content {
+  margin-left: auto; /* Occupy 2 parts of the available space */
+}
+
+.description h2 {
+  font-size: 35px;
+  margin-bottom: 10px;
+  color: #00f5f5;
+}
+
+.description p {
+  font-size: 15px;
+  word-wrap: wrap;
+  margin-bottom: 10px;
+}
+
+/* Action Buttons */
+.action-buttons {
+  display: flex;
+  justify-content: space-between;
+  align-items: center; /* Vertically center buttons */
+  padding: 20px;
+}
+
+.action-buttons button {
+  background-color: #391010;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  border-radius: 6px; /* Add rounded corners */
+  transition: background-color 0.3s, color 0.3s; /* Add smooth transitions */
+}
+
+.action-buttons button:hover {
+  background-color: #555;
+}
+
+/* Add these rules to your existing CSS */
+.white-glassmorphism {
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.p-3 {
+  padding: 0.75rem;
+}
+
+.justify-start {
+  justify-content: flex-start;
+}
+
+.items-start {
+  align-items: flex-start;
+}
+
+.flex-row {
+  flex-direction: row;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.flex {
+  display: flex;
+}
+
+.m-2 {
+  margin: 0.5rem;
+}
+
+.h-5 {
+  height: 1.25rem;
+}
+
+.w-5 {
+  width: 1.25rem;
+}
+
+.action-button {
+  width: 80%;
+}
+
+/* ... Your existing CSS ... */
+
+/* Feature Box Animation */
+.feature-box {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fade-in 1s ease-in-out forwards;
+}
+
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.description-content > div:first-child {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.5);
+  border: 2px dashed rgba(255, 255, 255, 0.3);
+  border-radius: 10px;
+  padding: 20px;
+  cursor: pointer;
+  transition: border-color 0.3s;
+}
+
+.description-content > div:first-child:hover {
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+.description-content > div:first-child svg {
+  color: white;
+  font-size: 3rem;
+}
+
+.description-content > div:first-child p {
+  color: white;
+  font-size: 1rem;
+  margin-top: 10px;
+  text-align: center;
+}
