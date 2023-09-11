@@ -25,12 +25,16 @@ router.post("/signup", async (req, res) => {
     // if (existingUser) {
     //   return res.status(400).json({ message: "Email already exists" });
     // }
+    // mod
     if (userType === "university"){
-      const res = await axios.get(``)
+      console.log('Executing generate keys get req')
+      const res = await axios.get(`http://localhost:${process.env.PORT}/ecdsa/genKeys`)
+      console.log(res.data)
       const pvt_key = res.data.privateKey
       const signer_address = res.data.publicKey
-      const newKey = new Key({email, pvt_key, signer_address})
+      const newKey = new Key({email, pvt : pvt_key, signer : signer_address})
       const key = await newKey.save()
+      console.log(key)
     }
     const newUser = new User({username, email, password, userType });
     const user = await newUser.save();
@@ -39,7 +43,7 @@ router.post("/signup", async (req, res) => {
       userId: user._id,
       token: crypto.randomBytes(32).toString("hex"),
     }).save();
-
+    // mod end
     const url = `${process.env.BASE_URL}users/${user._id}/verify/${token.token}`;
     // await sendEmail(user.email, "Verify Email", url);
 

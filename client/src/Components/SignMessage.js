@@ -4,7 +4,7 @@ import ErrorMessage from "./ErrorMessage";
 import axios from "axios";
 import { abi, contractAddress } from "../utils/constants";
 import "./SignMessage1.css";
-const URID = process.env.REACT_APP_BACKEND_URI
+const URID = process.env.REACT_APP_NGROK_BACKEND_URI
 const config = {
   headers: {
     "ngrok-skip-browser-warning": true
