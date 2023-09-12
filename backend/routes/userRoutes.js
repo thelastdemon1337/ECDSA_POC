@@ -6,14 +6,16 @@ const Key = require("../models/Key")
 const sendEmail = require("../utils/sendEmail");
 const router = express.Router();
 const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");  
+const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
 process.env.NODE_ENV = "development";
 const axios = require('axios')
+
+
 // POST /api/signup
 const otpMap = new Map();
 router.post("/signup", async (req, res) => {
-  const { username,email, password, userType } = req.body;
+  const { username, email, password, userType } = req.body;
 
   try {
     // Check if the email already exists in the database
@@ -21,22 +23,18 @@ router.post("/signup", async (req, res) => {
     if (existingEmail) {
       return res.status(400).json({ message: "Email already exists" });
     }
-    // const existingUser = await User.findOne({ name });
-    // if (existingUser) {
-    //   return res.status(400).json({ message: "Email already exists" });
-    // }
     // mod
-    if (userType === "university"){
+    if (userType === "university") {
       console.log('Executing generate keys get req')
       const res = await axios.get(`http://localhost:${process.env.PORT}/ecdsa/genKeys`)
       console.log(res.data)
       const pvt_key = res.data.privateKey
       const signer_address = res.data.publicKey
-      const newKey = new Key({email, pvt : pvt_key, signer : signer_address})
+      const newKey = new Key({ email, pvt: pvt_key, signer: signer_address })
       const key = await newKey.save()
       console.log(key)
     }
-    const newUser = new User({username, email, password, userType });
+    const newUser = new User({ username, email, password, userType });
     const user = await newUser.save();
     console.log(user);
     const token = await new Token({
@@ -80,21 +78,32 @@ router.post("/login", async (req, res) => {
       return res.status(401).json({ message: "Invalid credentials" });
     }
 
-    const token = jwt.sign({ userId: user._id }, "secretKey", {
-      expiresIn: "1h", // Token expiration time (optional)
-    });
+    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET);
+    return res.cookie("token", token, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "none"
+    }).status(200).json({ message: "Login Success", userId : user._id, userType : user.userType })
 
     // Return the user ID along with the token in the response
-    return res.status(200).json({
-      message: "Login success",
-      token,
-      userId: user._id,
-      userType:user.userType
-    });
   } catch (error) {
     res.status(500).json({ message: "Server error" });
   }
 });
+
+router.get("/logout", (req, res) => {
+  try {
+      res.cookie("token", "", {
+          httpOnly: true,
+          expires: new Date(0),
+          secure: true,
+          sameSite: "none",
+      }).send("Logout Successful!")
+  } catch (err) {
+      res.status(500).send({errorMessage: err})
+  }
+})
+
 
 // Add more user-related routes if needed
 router.get("/:id/verify/:token", async (req, res) => {
@@ -109,7 +118,7 @@ router.get("/:id/verify/:token", async (req, res) => {
     await User.updateOne({ _id: user._id, verified: true });
     await token.remove();
     res.status(200).send({ message: "Email verified successfully" });
-  } catch (err) {}
+  } catch (err) { }
 });
 router.post("/otp/validate", async (req, res) => {
   const { email, otp } = req.body;
@@ -135,16 +144,12 @@ router.post("/otp/validate", async (req, res) => {
       otpMap.delete(user._id.toString());
     }, 600000);
 
-    // Generate a JWT token for the user and send it as a response
-    const token = jwt.sign({ userId: user._id }, "secretKey", {
-      expiresIn: "1h", // Token expiration time (optional)
-    });
-
-    return res.status(200).json({
-      message: "OTP validation successful",
-      token,
-      userId: user._id,
-    });
+    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET);
+    return res.cookie("token", token, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "none"
+    }).status(200).send({ message: "OTP validation successful", userId : user._id })
   } catch (error) {
     res.status(500).json({ message: "Server error" });
   }

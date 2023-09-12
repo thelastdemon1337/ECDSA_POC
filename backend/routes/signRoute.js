@@ -7,7 +7,7 @@ const ec = new elliptic.ec('secp256k1');
 
 router.post('/sign', async (req, res) => {
     try {
-        console.log(req.body)
+        // console.log(req.body)
         const { text, privateKeyHex } = req.body
         // Convert the private key from hexadecimal to a Buffer
         const privateKeyBuffer = Buffer.from(privateKeyHex, 'hex');
@@ -29,7 +29,7 @@ router.post('/sign', async (req, res) => {
         // Derive the Ethereum address from the public key
         const addressBuffer = ethUtil.pubToAddress(publicKeyBuffer);
         const signerAddress = ethUtil.bufferToHex(addressBuffer);
-        console.log(`Signature : ${serializedSignature} \n SignerAddress : ${signerAddress}`)
+        console.log(`Signed ${text}`)
 
         res.status(200).json({
             signature: serializedSignature,
