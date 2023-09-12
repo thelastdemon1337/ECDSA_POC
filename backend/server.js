@@ -6,6 +6,9 @@ const Student = require('./models/Student')
 const mongoose = require('mongoose')
 const userRoutes = require("./routes/userRoutes")
 const connectDB = require('./config/dbConn')
+var cookies = require("cookie-parser");
+
+app.use(cookies());
 // const corsOptions = require('./config/corsOptions')
 
 

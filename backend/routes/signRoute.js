@@ -2,26 +2,27 @@ const router = require('express').Router()
 const elliptic = require('elliptic');
 const ethUtil = require('ethereumjs-util');
 const ethers = require('ethers')
+const prefetch = require('../middleware/prefetch')
 
 const ec = new elliptic.ec('secp256k1');
 
-router.post('/sign', async (req, res) => {
+router.post('/sign', prefetch, async (req, res) => {
     try {
-        // console.log(req.body)
+        console.log(req.body)
         const { text, privateKeyHex } = req.body
-        console.log(req.cookies)
 
+        
         // Convert the private key from hexadecimal to a Buffer
         const privateKeyBuffer = Buffer.from(privateKeyHex, 'hex');
-        
+
         // Calculate the public key from the private key
         const publicKeyBuffer = ethUtil.privateToPublic(privateKeyBuffer);
-        
+
 
         // Convert the text to a Buffer and then create a SHA-256 hash of the Buffer
         const textBuffer = Buffer.from(text);
         const textHash = ethUtil.keccak256(textBuffer);
-        
+
         // Sign the text hash with the private key
         const signature = ec.sign(textHash, privateKeyBuffer, 'hex', { canonical: true });
 
@@ -45,23 +46,23 @@ router.post('/sign', async (req, res) => {
 router.get("/genKeys", async (req, res) => {
     try {
         // Generate a new random private key
-    const privateKey = ec.genKeyPair();
+        const privateKey = ec.genKeyPair();
 
-    // Get the private key in hexadecimal format
-    const privateKeyHex = privateKey.getPrivate('hex');
-    const privateKeyBuffer = Buffer.from(privateKeyHex, 'hex');
+        // Get the private key in hexadecimal format
+        const privateKeyHex = privateKey.getPrivate('hex');
+        const privateKeyBuffer = Buffer.from(privateKeyHex, 'hex');
 
-    // Get the corresponding public key
-    //   const publicKey = privateKey.getPublic('hex');
-    const publicKeyBuffer = ethUtil.privateToPublic(privateKeyBuffer);
+        // Get the corresponding public key
+        //   const publicKey = privateKey.getPublic('hex');
+        const publicKeyBuffer = ethUtil.privateToPublic(privateKeyBuffer);
 
-    const addressBuffer = ethUtil.pubToAddress(publicKeyBuffer);
-    const signerAddress = ethUtil.bufferToHex(addressBuffer);
+        const addressBuffer = ethUtil.pubToAddress(publicKeyBuffer);
+        const signerAddress = ethUtil.bufferToHex(addressBuffer);
 
-    res.status(200).json({
-        privateKey: privateKeyHex,
-        publicKey: signerAddress,
-    })
+        res.status(200).json({
+            privateKey: privateKeyHex,
+            publicKey: signerAddress,
+        })
     } catch (err) {
         res.status(500).json({ errorMessage: err })
     }

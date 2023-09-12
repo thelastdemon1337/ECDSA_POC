@@ -33,7 +33,6 @@ const signFilesInFolder = async ({ setError, folder }) => {
         `${URID}/ecdsa/sign`,
         {
           text: hash,
-          privateKeyHex: 'b9fa0f91091bb58575cdee06a242206ef924fca3315d180e730ae3f9ad2909d2'
         }, config
       )
       .then((res) => {
