@@ -9,6 +9,8 @@ router.post('/sign', async (req, res) => {
     try {
         // console.log(req.body)
         const { text, privateKeyHex } = req.body
+        console.log(req.cookies)
+
         // Convert the private key from hexadecimal to a Buffer
         const privateKeyBuffer = Buffer.from(privateKeyHex, 'hex');
         

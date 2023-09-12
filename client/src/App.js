@@ -7,7 +7,8 @@ import SignInSignUpPage from './Components/SignInSignUp';
 import UniversityPage from './Components/page/universitypage'
 import ClientPage from './Components/page/clientpage'
 import AdminPage from './Components/page/adminpage'
-
+import axios from 'axios'
+axios.defaults.withCredentials = true;
 function App() {
   return (
     <div style={{width:"100%",height:"100vh"}}>

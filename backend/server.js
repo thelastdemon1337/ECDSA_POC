@@ -6,12 +6,21 @@ const Student = require('./models/Student')
 const mongoose = require('mongoose')
 const userRoutes = require("./routes/userRoutes")
 const connectDB = require('./config/dbConn')
-const corsOptions = require('./config/corsOptions')
+// const corsOptions = require('./config/corsOptions')
 
 
 // middleware
-app.use(cors())
+// app.use(cors())
 app.use(express.json())
+// Define a CORS middleware with specific options
+const allowedOrigins = ['http://localhost:3000', 'front end urls', 'ngrok backend url'];
+const corsOptions = {
+  origin: allowedOrigins, // Allow requests from any origin (you can specify your origin(s) here)
+  credentials: true, // Allow credentials (e.g., cookies, HTTP authentication)
+};
+
+// Use the CORS middleware for all routes
+app.use(cors(corsOptions));
 app.options('*', cors()); 
 
 

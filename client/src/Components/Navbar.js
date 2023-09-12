@@ -1,6 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import "./Navbar.css"
 import { useNavigate } from 'react-router-dom'
+import axios from 'axios'
+const URID = process.env.REACT_APP_NGROK_BACKEND_URI
+
+const config = {
+  headers: {
+    "ngrok-skip-browser-warning": true
+  }
+}
 
 const Navbar = ({metamaskConnected,showMetaMaskBtn,showMetaMaskBtnConn}) => {
   const [metaMaskConn,setMetaMaskConn] = useState(false)
@@ -23,8 +31,13 @@ const Navbar = ({metamaskConnected,showMetaMaskBtn,showMetaMaskBtnConn}) => {
         }
       };
 
-      const handleLogout = () => {
-        navigate('/')
+      const handleLogout = async () => {
+      await axios.get(
+          `${URID}/api/auth/logout`, config
+        ).then(() => {
+          console.log("Logged out!")
+          navigate('/')
+        })
       }
 
   return (
