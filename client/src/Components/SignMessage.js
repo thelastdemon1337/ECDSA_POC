@@ -15,7 +15,6 @@ const config = {
 
 const signFilesInFolder = async ({ setError, folder }) => {
   try {
-
     const files = folder.files;
 
     const signatures = [];
@@ -146,17 +145,20 @@ export default function SignMessage() {
 
     // Blockchain logic
 
-    if (typeof window.ethereum !== "undefined") {
+    // if (typeof window.ethereum !== "undefined") {
       console.log("Storing Transcript on blockchain");
-      try {
-        await window.ethereum.request({ method: "eth_requestAccounts" });
-      } catch (error) {
-        console.log(error);
-      }
-      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const providerUrl = 'http://localhost:8545'; // Replace with your local node's URL
+      const privateKey = 'df57089febbacf7ba0bc227dafbffa9fc08a93fdc68e1e42411a14efcf23656e'; 
+      // try {
+      //   await window.ethereum.request({ method: "eth_requestAccounts" });
+      // } catch (error) {
+      //   console.log(error);
+      // }
+      const provider = new ethers.providers.JsonRpcProvider({url : providerUrl});
+      const customWallet = new ethers.Wallet(privateKey, provider);
       // const provider = new ethers.providers.JsonRpcProvider("https://eth-sepolia.g.alchemy.com/v2/f6-isSCf5OjiqBkWaONyDJCeUe-OPlzG")
-      const signer = provider.getSigner();
-      const contract = new ethers.Contract(contractAddress, abi, signer);
+      // const signer = provider.getSigner();
+      const contract = new ethers.Contract(contractAddress, abi, customWallet);
       console.log(contract);
 
       certs.forEach(async (cert) => {
@@ -196,9 +198,9 @@ export default function SignMessage() {
           console.log(error);
         }
       });
-    } else {
-      alert("Metamask Not Found.");
-    }
+    // } else {
+    //   alert("Metamask Not Found.");
+    // }
   };
 
   const handleDownload = () => {
